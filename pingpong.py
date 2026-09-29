@@ -1,15 +1,13 @@
 import pygame
-from random import *
-
 pygame.init()
 
-colb = (100, 180, 255)
+colb = (56, 30, 4)
 b = pygame.display.set_mode((500, 500))
 pygame.display.set_caption("Пинг Понг")
 
 clock = pygame.time.Clock()
 
-
+end_time = 0
 class Area():
     def __init__(self, x=0, y=0, width=10, height=10, color=None):
         self.rect = pygame.Rect(x, y, width, height)
@@ -30,7 +28,7 @@ class Area():
     def colliderect(self, rect):
         return self.rect.colliderect(rect)
 
-    def text(self, text, fsize=10, text_color=(255, 0, 0)):
+    def text(self, text, fsize=35, text_color=(255, 0, 0)):
         self.image = pygame.font.Font(None, fsize).render(
             text, True, text_color
         )
@@ -57,8 +55,8 @@ speed_y = 3
 game = True
 
 
-platform1 = Area(20, 200, 20, 100, (255, 255, 255))
-platform2 = Area(460, 200, 20, 100, (255, 255, 255))
+platform1 = Area(20, 200, 20, 100, (30, 60, 120))
+platform2 = Area(460, 200, 20, 100, (30, 60, 120))
 
 
 ball = Picture("ball11.png", 225, 225, 50, 50)
@@ -70,106 +68,140 @@ move_down1 = False
 move_up2 = False
 move_down2 = False
 
-t1 = Area(20, 200, 1, 1, (255, 255, 255))
+t1 = Area(85, 250, 1, 1, (56, 30, 4))
 
+t2 = Area(7, 10, 1, 1, (56, 30, 4))
+t3 = Area(110, 10, 1, 1, (56, 30, 4))
+
+t4 = Area(350, 10, 1, 1, (56, 30, 4))
+t5 = Area(453, 10, 1, 1, (56, 30, 4))
+
+finish = False
+score1 = 0
+score2 = 0
 while game:
     b.fill(colb)
 
+    if finish!=True:
+        t2.text("Счет 1п:", text_color=(255, 255, 255))
+        t3.text(str(score1), text_color=(255, 255, 255))
+        t2.write(10, 10)
+        t3.write(10, 10)
 
-    for e in pygame.event.get():
+        t4.text("Счет 2п:", text_color=(255, 255, 255))
+        t5.text(str(score2), text_color=(255, 255, 255))
+        t4.write(10, 10)
+        t5.write(10, 10)
 
-
-        if e.type == pygame.QUIT:
-            game = False
-
-
-        if e.type == pygame.KEYDOWN:
-
-
-            if e.key == pygame.K_w:
-                move_up1 = True
-
-            if e.key == pygame.K_s:
-                move_down1 = True
+        for e in pygame.event.get():
 
 
-            if e.key == pygame.K_UP:
-                move_up2 = True
-
-            if e.key == pygame.K_DOWN:
-                move_down2 = True
-
-        if e.type == pygame.KEYUP:
+            if e.type == pygame.QUIT:
+                game = False
 
 
-            if e.key == pygame.K_w:
-                move_up1 = False
-
-            if e.key == pygame.K_s:
-                move_down1 = False
+            if e.type == pygame.KEYDOWN:
 
 
-            if e.key == pygame.K_UP:
-                move_up2 = False
+                if e.key == pygame.K_w:
+                    move_up1 = True
 
-            if e.key == pygame.K_DOWN:
-                move_down2 = False
-
-    if move_up1 and platform1.rect.y > 0:
-        platform1.rect.y -= 7
-
-    if move_down1 and platform1.rect.y < 400:
-        platform1.rect.y += 7
+                if e.key == pygame.K_s:
+                    move_down1 = True
 
 
-    if move_up2 and platform2.rect.y > 0:
-        platform2.rect.y -= 7
+                if e.key == pygame.K_UP:
+                    move_up2 = True
 
-    if move_down2 and platform2.rect.y < 400:
-        platform2.rect.y += 7
+                if e.key == pygame.K_DOWN:
+                    move_down2 = True
 
-
-    ball.rect.x += speed_x
-    ball.rect.y += speed_y
+            if e.type == pygame.KEYUP:
 
 
-    if ball.rect.top <= 0:
-        ball.rect.top = 0
-        speed_y *= -1
+                if e.key == pygame.K_w:
+                    move_up1 = False
+
+                if e.key == pygame.K_s:
+                    move_down1 = False
 
 
-    if ball.rect.bottom >= 500:
-        ball.rect.bottom = 500
-        speed_y *= -1
+                if e.key == pygame.K_UP:
+                    move_up2 = False
+
+                if e.key == pygame.K_DOWN:
+                    move_down2 = False
+
+        if move_up1 and platform1.rect.y > 0:
+            platform1.rect.y -= 7
+
+        if move_down1 and platform1.rect.y < 400:
+            platform1.rect.y += 7
 
 
-    if ball.colliderect(platform1.rect) and speed_x < 0:
+        if move_up2 and platform2.rect.y > 0:
+            platform2.rect.y -= 7
 
-        ball.rect.left = platform1.rect.right
-
-        speed_x *= -1
-
-
-
-    if ball.colliderect(platform2.rect) and speed_x > 0:
-
-        ball.rect.right = platform2.rect.left
-
-        speed_x *= -1
-
-    if ball.rect.right < 0:
-        t1.text("Победила 2-ая платформа", text_color=(0, 255, 0))
-        t1.write(10, 10)
-        game = False
-    if ball.rect.left > 500:
-        t1.text("Победила 1-ая платформа", text_color=(0, 255, 0))
-        t1.write(10, 10)
-        game = False
+        if move_down2 and platform2.rect.y < 400:
+            platform2.rect.y += 7
 
 
-    platform1.fillcolor()
-    platform2.fillcolor()
-    ball.draw()
+        ball.rect.x += speed_x
+        ball.rect.y += speed_y
+
+
+        if ball.rect.top <= 0:
+            ball.rect.top = 0
+            speed_y *= -1
+
+
+        if ball.rect.bottom >= 500:
+            ball.rect.bottom = 500
+            speed_y *= -1
+
+
+        if ball.colliderect(platform1.rect) and speed_x < 0:
+
+            ball.rect.left = platform1.rect.right
+
+            speed_x *= -1
+
+
+
+        if ball.colliderect(platform2.rect) and speed_x > 0:
+
+            ball.rect.right = platform2.rect.left
+
+            speed_x *= -1
+
+        if ball.rect.right < 0:
+            score2+=1
+            ball.rect.left = platform1.rect.right
+            speed_x *= -1
+
+        if ball.rect.left > 500:
+            score1+=1
+            ball.rect.right = platform2.rect.left
+            speed_x *= -1
+
+        if score1>=2:
+            t1.text("Победила 1-ая платформа", text_color=(0, 255, 0))
+            end_time = pygame.time.get_ticks()+5000
+        if score2>=2:
+            t1.text("Победила 2-ая платформа", text_color=(0, 255, 0))
+            end_time = pygame.time.get_ticks()+5000
+        if end_time!=0:
+            t1.write(10, 10)
+            if pygame.time.get_ticks()>=end_time:
+                game=False
+
+
+
+
+        platform1.fillcolor()
+        platform2.fillcolor()
+        ball.draw()
+
 
     pygame.display.update()
 
