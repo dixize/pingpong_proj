@@ -37,22 +37,12 @@ class Area():
 
     def write(self, shift_x=0, shift_y=0):
         pygame.draw.rect(b, self.fill_color, self.rect)
-        b.blit(
-            self.image,
-            (self.rect.x + shift_x, self.rect.y + shift_y)
-        )
+        b.blit(self.image, (self.rect.x + shift_x, self.rect.y + shift_y))
 
 
 class Picture(Area):
     def __init__(self, name, x=0, y=0, width=10, height=10):
-        Area.__init__(
-            self,
-            x=x,
-            y=y,
-            width=width,
-            height=height,
-            color=None
-        )
+        Area.__init__(self, x=x, y=y, width=width, height=height, color=None)
 
         self.image = pygame.image.load(name)
         self.image = pygame.transform.scale(self.image,(width, height))
@@ -80,8 +70,9 @@ move_down1 = False
 move_up2 = False
 move_down2 = False
 
-while game:
+t1 = Area(20, 200, 1, 1, (255, 255, 255))
 
+while game:
     b.fill(colb)
 
 
@@ -167,10 +158,13 @@ while game:
         speed_x *= -1
 
     if ball.rect.right < 0:
+        t1.text("Победила 2-ая платформа", text_color=(0, 255, 0))
+        t1.write(10, 10)
         game = False
     if ball.rect.left > 500:
+        t1.text("Победила 1-ая платформа", text_color=(0, 255, 0))
+        t1.write(10, 10)
         game = False
-
 
 
     platform1.fillcolor()
