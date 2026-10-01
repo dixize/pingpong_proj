@@ -1,5 +1,6 @@
 import pygame
 pygame.init()
+from random import randint
 
 colb = (56, 30, 4)
 b = pygame.display.set_mode((500, 500))
@@ -78,6 +79,11 @@ t5 = Area(453, 10, 1, 1, (56, 30, 4))
 
 finish = False
 score1 = 0
+
+p1_sp = 7
+p2_sp = 7
+
+
 score2 = 0
 while game:
     b.fill(colb)
@@ -98,6 +104,25 @@ while game:
 
             if e.type == pygame.QUIT:
                 game = False
+
+            if e.type == pygame.KEYDOWN:
+
+                if e.key == pygame.K_1:
+
+                    bonus = randint(1, 4)
+
+                    if bonus == 1:
+                        platform1.rect.height = 150
+
+                    elif bonus == 2:
+                        platform2.rect.height = 150
+
+                    elif bonus == 3:
+                        speed_x *= 2
+                        speed_y *= 2
+
+                    elif bonus == 4:
+                        platform1_speed = 12
 
 
             if e.type == pygame.KEYDOWN:
@@ -133,17 +158,17 @@ while game:
                     move_down2 = False
 
         if move_up1 and platform1.rect.y > 0:
-            platform1.rect.y -= 7
+            platform1.rect.y -= p1_sp
 
         if move_down1 and platform1.rect.y < 400:
-            platform1.rect.y += 7
+            platform1.rect.y += p1_sp
 
 
         if move_up2 and platform2.rect.y > 0:
-            platform2.rect.y -= 7
+            platform2.rect.y -= p2_sp
 
         if move_down2 and platform2.rect.y < 400:
-            platform2.rect.y += 7
+            platform2.rect.y += p2_sp
 
 
         ball.rect.x += speed_x
@@ -187,13 +212,11 @@ while game:
         if score1>=2:
             t1.text("Победила 1-ая платформа", text_color=(0, 255, 0))
             end_time = pygame.time.get_ticks()+5000
+            finish = True
         if score2>=2:
             t1.text("Победила 2-ая платформа", text_color=(0, 255, 0))
+            finish = True
             end_time = pygame.time.get_ticks()+5000
-        if end_time!=0:
-            t1.write(10, 10)
-            if pygame.time.get_ticks()>=end_time:
-                game=False
 
 
 
@@ -201,6 +224,10 @@ while game:
         platform1.fillcolor()
         platform2.fillcolor()
         ball.draw()
+    if end_time!=0:
+        t1.write(10, 10)
+        if pygame.time.get_ticks()>=end_time:
+            game=False
 
 
     pygame.display.update()
